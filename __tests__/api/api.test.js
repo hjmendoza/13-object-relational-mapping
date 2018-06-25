@@ -2,7 +2,7 @@
 
 require('babel-register');
 const superagent = require('superagent');
-const app = require('../../../src/app.js');
+const app = require('../../src/app.js');
 
 describe('API', () => {
 

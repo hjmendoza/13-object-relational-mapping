@@ -27,9 +27,17 @@ router.get('/api/v1/:model', (req,res,next) => {
 
 router.get('/api/v1/:model/:id', (req,res,next) => {
   req.model.findById(req.params.id)
-    .then( data => sendJSON(res,data) )
+    .then( data => {
+      if(data === null){
+        res.send('404');
+        res.end();
+      } else{
+        sendJSON(res,data);
+      }
+    })
     .catch( next );
 });
+
 
 router.post('/api/v1/:model', (req,res,next) => {
   let record = new req.model(req.body);
