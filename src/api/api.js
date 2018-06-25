@@ -12,6 +12,13 @@ router.param('model', modelFinder);
 // In all cases, we just catch(next), which feeds any errors we get into the next() as a param
 // This fires off the error middleware automatically.  Otherwise, we send out a formatted JSON Response
 
+router.get('/', (req, res) => {
+  res.statusCode = 200;
+  res.send('Welcome');
+  res.statusMessage = 'OK';
+  res.end();
+});
+
 router.get('/api/v1/:model', (req,res,next) => {
   req.model.find({})
     .then( data => sendJSON(res,data) )
