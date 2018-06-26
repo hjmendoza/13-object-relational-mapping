@@ -1,44 +1,32 @@
 'use strict';
 
-require('babel-register'); 
-
-const mongoose = require('mongoose');
-const Mockgoose = require('mockgoose').Mockgoose;
-const mockgoose = new Mockgoose(mongoose);
-
-// import Place from '../../src/models/places.js';
-import {server} from '../../src/app.js';
-
-// const API_URL = '/api/v1/places';
-
-const mockRequest = require('supertest')(server);
-
-jest.setTimeout(30000);
-
-afterAll(() => {
-  mongoose.connection.close();
-});
+require('babel-register');
+const superagent = require('superagent');
+const app = require('../../src/app.js');
 
 describe('API', () => {
 
-  beforeAll( (done) => {
-    mockgoose.prepareStorage().then(() => {
-      mongoose.connect('mongodb://localhost:27017/lab13').then(() => {
-        done();
+  const PORT = 8888;
+  beforeAll( () => {
+    app.start(PORT);
+  });
+  afterAll( () => {
+    app.stop();
+  });
+
+  it('gets a 200 response on a good model', () => {
+    return superagent.get('http://localhost:8888/api/v1/bar')
+      .then(response => {
+        expect(response.statusCode).toEqual(200);
+      })
+      .catch(console.err);
+  });
+
+  it('gets a 500 response on an invalid model', () => {
+    return superagent.get('http://localhost:8888/api/v1/foobar')
+      .then(console.log)
+      .catch(response => {
+        expect(response.status).toEqual(500);
       });
-    });
   });
-
-  afterEach( (done) => {
-    mockgoose.helper.reset().then(done);
-  });
-
-  it('get should return 200 for home', () => {
-
-    return mockRequest.get('/')
-      .then(res => {
-        expect(res.statusCode).toBe(200);
-      });
-  });
-
 });

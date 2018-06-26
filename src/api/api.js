@@ -14,9 +14,14 @@ router.get('/', (req, res) => {
 });
 
 router.get('/api/v1/:model', (req, res, next) => {
-  req.model.find({})
-    .then(data => sendJSON(res, data))
-    .catch(next);
+  if (req.model === undefined) {
+    res.statusCode = 500;
+  } else {
+    req.model.find({})
+      .then(data => sendJSON(res, data))
+      .catch(next);
+  }
+
 });
 
 router.get('/api/v1/:model/:id', (req, res, next) => {
@@ -42,8 +47,8 @@ router.post('/api/v1/:model', (req, res, next) => {
 
 router.put('/api/v1/:model/:id', (req, res, next) => {
   req.model.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  })
+      new: true,
+    })
     .then((data) => {
       sendJSON(res, data);
     })
