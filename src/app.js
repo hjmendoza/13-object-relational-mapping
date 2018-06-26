@@ -17,6 +17,7 @@ let app = express();
 // App level middleware
 app.use(cors());
 app.use(morgan('dev'));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 // Our API Routes

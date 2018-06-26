@@ -7,4 +7,6 @@ const placesSchema = mongoose.Schema({
   city: { type:String, uppercase:true, required:true },
 });
 
-export default mongoose.model('places', placesSchema);
+const skipInit = process.env.NODE_ENV === 'test';
+
+export default mongoose.model('Place', placesSchema, 'places', skipInit);
